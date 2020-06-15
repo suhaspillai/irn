@@ -37,7 +37,7 @@ def validate(model, data_loader):
 
 
 def run(args):
-
+    
     model = getattr(importlib.import_module(args.cam_network), 'Net')()
 
 

@@ -106,7 +106,7 @@ def detect_instance(score_map, mask, class_id, max_fragment_size=0):
 
 
 def _work(process_id, model, dataset, args):
-
+    #import pdb;pdb.set_trace()
     n_gpus = torch.cuda.device_count()
     databin = dataset[process_id]
     data_loader = DataLoader(databin, shuffle=False, num_workers=args.num_workers // n_gpus, pin_memory=False)
@@ -116,6 +116,7 @@ def _work(process_id, model, dataset, args):
         model.cuda()
 
         for iter, pack in enumerate(data_loader):
+            print(iter)
             img_name = pack['name'][0]
             size = np.asarray(pack['size'])
 
@@ -156,6 +157,7 @@ def _work(process_id, model, dataset, args):
 
 
 def run(args):
+
     model = getattr(importlib.import_module(args.irn_network), 'EdgeDisplacement')()
     model.load_state_dict(torch.load(args.irn_weights_name), strict=False)
     model.eval()
@@ -168,5 +170,7 @@ def run(args):
     dataset = torchutils.split_dataset(dataset, n_gpus)
 
     print("[ ", end='')
-    multiprocessing.spawn(_work, nprocs=n_gpus, args=(model, dataset, args), join=True)
+    #multiprocessing.spawn(_work, nprocs=n_gpus, args=(model, dataset, args), join=True)
+
+    _work(0, model, dataset, args)
     print("]")

@@ -26,6 +26,7 @@ def _work(process_id, model, dataset, args):
         model.cuda()
 
         for iter, pack in enumerate(data_loader):
+            #import pdb;pdb.set_trace()
             img_name = voc12.dataloader.decode_int_filename(pack['name'][0])
             orig_img_size = np.asarray(pack['size'])
 
@@ -67,7 +68,8 @@ def run(args):
     dataset = torchutils.split_dataset(dataset, n_gpus)
 
     print("[", end='')
-    multiprocessing.spawn(_work, nprocs=n_gpus, args=(model, dataset, args), join=True)
+    #multiprocessing.spawn(_work, nprocs=n_gpus, args=(model, dataset, args), join=True)
+    _work(0, model, dataset, args)
     print("]")
 
     torch.cuda.empty_cache()
